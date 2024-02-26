@@ -1,3 +1,188 @@
+
+
+
+
+
+        # Set number of states to 2, for simplicity
+
+        # Array for Predicted Probabilities
+        predicted_probabilities = np.zeros([self.n_states, self.T + 1])
+        
+        # Array for Filtered Probabilities
+        filtered_probabilities = np.zeros([self.n_states, self.T])
+
+        # Array for Log-Likelihood Contributions
+        likelihood_contributions = np.zeros(self.T)
+
+        # Get Transition Probabilities & R matrix from your parameterization function
+        p_00, p_11, self.R = self.parameterize(random_guesses)
+
+
+        # Initialize arrays or lists to hold the determinants and inverses
+        self.det_R = np.zeros(2)
+        self.inv_R = []
+
+        for i in range(2):
+            self.det_R[i] = np.linalg.det(self.R[i])  # Compute determinant of R in each state
+            self.inv_R.append(np.linalg.inv(self.R[i]))  # Compute inverse of R in each state
+
+        transition_matrix = self.create_transition_matrix(p_00, p_11)
+        predicted_probabilities[:, 0] = self.calculate_initial_probabilities(transition_matrix)
+
+        # print('The correlation of R in state 0')
+        # print(self.R[0])
+        print('The Determinant of R in state 0')
+        print(self.det_R[0])
+        # print('The inverse of R in state 0')
+        # print(self.inv_R[0])
+        # print('The correlation of R in state 1')
+        # print(self.R[1])
+        print('The Determinant of R in state 1')
+        print(self.det_R[1])
+        if self.det_R[1] < 1e-6:
+            self.det_R[1] = 1000
+        if self.det_R[0] < 1e-6:
+            self.det_R[0] = 1000
+        # print('The inverse of R in state 1')
+        # print(self.inv_R[1])
+        # To Hold values of Forward Filter Recursions
+        eta = np.zeros(self.n_states)
+        
+        # To Hold values of Forward Filter Recursions
+        filters = np.zeros(self.n_states)
+        
+        # To Hold values of Partial Log-Likelihoods.
+        partial_likelihood = np.zeros(self.n_states)
+
+        # The Hamilton Filter Loop
+        # The Main For Loop:
+        for t in range(self.T):
+            # Calculate State Densities
+            for state in range(self.n_states):
+                eta[state] = self.density(t, state)
+                partial_likelihood[state] = predicted_probabilities[state,t] * eta[state]
+                    
+          
+            #filtering
+            filter_0 = eta[0]*predicted_probabilities[0,t]/(eta[0]*predicted_probabilities[0,t]+eta[1]*predicted_probabilities[1,t])
+            filter_1 = eta[1]*predicted_probabilities[1,t]/(eta[0]*predicted_probabilities[0,t]+eta[1]*predicted_probabilities[1,t])
+            filtered_probabilities[:,t] = filter_0, filter_1     
+            
+           
+            # Calculate the Log-Likelihood
+            likelihood_contributions[t] = np.log(np.sum(partial_likelihood[state]))
+     
+            # Calculate the Prediction step
+            predicted_probabilities[[0,1],t+1] = transition_matrix.dot(filtered_probabilities[[0,1],t])
+            #predicted_probabilities[:, t+1] = prediction_step(transition_matrix, filtered_probabilities, t)
+        
+        negative_likelihood = -np.sum(likelihood_contributions)
+
+        return negative_likelihood
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
