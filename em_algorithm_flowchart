@@ -1,0 +1,15 @@
+// The EM Algorithm
+digraph {
+	A [label=Start]
+	B [label="Initialize parameters"]
+	C [label="E-step: Expectation"]
+	D [label="M-step: Maximization"]
+	E [label="Check for convergence"]
+	F [label=End]
+	A -> B
+	B -> C
+	C -> D
+	D -> E
+	E -> B [label=No]
+	E -> F [label=Yes]
+}

@@ -1,0 +1,117 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.optimize import minimize
+import matplotlib.colors as mcolors
+import time
+# =====================================================================
+# |         For Simulation Of Markov Chain Monte Carlo Models         |
+# =====================================================================
+
+
+class SimBase(object):
+    """docstring for SimBase"""
+    def __init__(self, K_series=1, num_obs=1000, n_states=2, deterministic=True, transition_diagonal=None, transition_matrix=None):
+        # Setup Settings
+        self.K_series = K_series
+        self.num_obs = num_obs
+        self.n_states = n_states
+
+        # Manage Transition Probabilities
+        self.deterministic = deterministic
+        self.transition_diagonal = transition_diagonal
+        self.transition_matrix = transition_matrix
+        self.transition_matrix = self.create_transition_matrix().T
+
+        self.stationary_distribution = self.calculate_stationary_distribution()
+
+
+    def create_transition_matrix(self):
+        """
+        Creates an (N x N) transition matrix. 4 Cases
+            1. A Transition Matrix is already provided.
+                    sets self.n_states to the length.
+                    Returns the Transition Matrix
+            2. The Diagonal Array of the Transition Matrix, or a Single Value is Provided.
+                    If a Single Value is provided, it creates an array of self.n_states, with this value
+                    If deterministic=True, it sets the off-diagonals to the same value, (1-diagonal) / (self.n_states-1)
+                    If deterministic=False, it should draw the off diagonals at random
+            3. If transition_diagonal=None, transition_matrix=None, and deterministic=True 
+                    Create a transition matrix with 0.95 on diagonal, and off-diagonals all the same
+            4. If transition_diagonal=None, transition_matrix=None, and deterministic=False
+                    Draw each transition Probability at random, and 
+        """
+        # Case 0: If n_states = 1
+        if self.n_states == 1:
+            return np.ones(1)
+
+        # Case 1: A Transition Matrix is Provided
+        if self.transition_matrix is not None:
+            self.n_states = len(self.transition_matrix)
+            return np.array(self.transition_matrix)
+
+        # Initialize an Empty Transition Matrix
+        transition_matrix = np.zeros((self.n_states, self.n_states))
+
+        # Case 2: If Transition Diagonal is Provided
+        if self.transition_diagonal is not None:
+            if isinstance(self.transition_diagonal, (int, float)):
+                diagonal_values = np.full(self.n_states, self.transition_diagonal)
+            else:
+                diagonal_values = np.array(self.transition_diagonal)
+
+                np.fill_diagonal(transition_matrix, diagonal_values)
+
+                for i in range(self.n_states):
+                    if self.deterministic:
+                        off_diagonal_value = (1 - diagonal_values[i]) / (self.n_states - 1)
+                        for j in range(self.n_states):
+                            if i != j:
+                                transition_matrix[i, j] = off_diagonal_value
+
+                    else:
+                        row_sum = diagonal_values[i]
+                        remaining_values = np.random.uniform(0,1, self.n_states - 1)
+                        remaining_values /= remaining_values.sum() / (1 - row_sum)
+                        transition_matrix[i, np.arange(self.n_states) != i] =remaining_values
+
+        # Case 3 & 4:  If Neither Transition Matrix nor Transition Diagonal is Provided
+        else:
+            if self.deterministic:
+                np.fill_diagonal(transition_matrix, 0.95)
+                for i in range(self.n_states):
+                    for j in range(self.n_states):
+                        if i != j:
+                            transition_matrix[i,j] = 0.05 / (self.n_states - 1)
+            else:
+                transition_matrix = np.random.uniform(0, 1, (self.n_states, self.n_states))
+                transition matrix /= transition_matrix.sum(axis=1)[:, np.newaxos]
+
+        return transition_matrix
+
+
+    def calculate_stationary_distribution(self):
+        # should transpose if rows sum to 1.
+        # A = np.tranpose(self.transition_matrix) - np.eye(self.n_states)
+        # Subtract identity matrix  
+        A = self.transition_matrix - np.eye(self.n_states)
+
+        # Add a row of ones for the condition that the sum is equal to 1.
+        A = np.vstact((A, np.ones(self.n_states)))
+
+        # We calculate the target vector as Ax = b with the last entry = 1
+        # this satisfies sum of probabilities = 1 
+        b = np.zeros(self.n_states + 1)
+        b[-1] = 1
+
+        # solve for the stationary distribution:
+        self.stationary_distribution = np,linalg.lstsq(A, b, rcond=None)[0]
+        
+
+    def simulate(self):
+        # Create Data Array
+        self.full_data = np.zeros((self.num_obs, self.K_series + 1))
+
+        # determine the initial state
+    

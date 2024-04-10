@@ -1,0 +1,1078 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "23dc436f-682c-430f-989c-f94ac638a465",
+   "metadata": {},
+   "source": [
+    "# Verify my Scripts"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "4df52cd5-7cce-4b11-a6ad-e1ea4f456531",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import seaborn as sns\n",
+    "import importlib\n",
+    "import Tools\n",
+    "import time\n",
+    "from tqdm import tqdm\n",
+    "import matplotlib.pyplot as plt\n",
+    "O = 500\n",
+    "K = 5\n",
+    "N = 1\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "88f4ddd4-115f-45bb-9187-49810441f3d4",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    }
+   ],
+   "source": [
+    "from importlib import reload\n",
+    "reload(Tools)\n",
+    "from Tools import RSDC, CCC\n",
+    "# phi_vals = np.zeros((K,N))\n",
+    "sim = RSDC(n_states=N, K_series = K, num_obs = O, transition_diagonal=0.99, deterministic=True) #sigmas = [[0,0]]\n",
+    "sim.simulate()\n",
+    "ccc = CCC(sim.data)\n",
+    "ccc.fit()\n",
+    "ccc.minimize_correlation()\n",
+    "# reload(EM)\n",
+    "# from EM import Base\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "72553ac2-ad9e-44ab-a997-e1e5cd0959dd",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[array([[ 1.        ,  0.60545664,  0.05511335,  0.56474104, -0.50903819],\n",
+       "        [ 0.60545664,  1.        , -0.02317445,  0.28122608, -0.591552  ],\n",
+       "        [ 0.05511335, -0.02317445,  1.        , -0.31035097,  0.1110784 ],\n",
+       "        [ 0.56474104,  0.28122608, -0.31035097,  1.        , -0.14651055],\n",
+       "        [-0.50903819, -0.591552  ,  0.1110784 , -0.14651055,  1.        ]])]"
+      ]
+     },
+     "execution_count": 25,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "sim.rho_matrix\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "296ac868-b3a6-45c9-b093-af7ae128dbe4",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([-322.24232978,  389.31124836,  373.40422189,   34.34996314,\n",
+       "        232.49707276,   95.49536819,   54.89951621,  -35.4942233 ,\n",
+       "       -166.56437298, -117.88391113])"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ccc.ccc_estimate.x"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "a559e20f-d591-459c-b263-4bbf068ebcd4",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[   1.        , -322.24232978,  389.31124836,  373.40422189,\n",
+       "          34.34996314],\n",
+       "       [-322.24232978,    1.        ,  232.49707276,   95.49536819,\n",
+       "          54.89951621],\n",
+       "       [ 389.31124836,  232.49707276,    1.        ,  -35.4942233 ,\n",
+       "        -166.56437298],\n",
+       "       [ 373.40422189,   95.49536819,  -35.4942233 ,    1.        ,\n",
+       "        -117.88391113],\n",
+       "       [  34.34996314,   54.89951621, -166.56437298, -117.88391113,\n",
+       "           1.        ]])"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ccc.R_matrix"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d4de07b0-de63-4941-bfd7-0277f8ee5e9c",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Error, a D matrix is negative!\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Error, a D matrix is negative!\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Error, a D matrix is negative!\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Error, a D matrix is negative!\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Error, a D matrix is negative!\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Error, a D matrix is negative!\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Error, a D matrix is negative!\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Error, a D matrix is negative!\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Error, a D matrix is negative!\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n",
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Error, a D matrix is negative!\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/home/august/code/jupyter/Thesis/Tools.py:713: RuntimeWarning: invalid value encountered in log\n",
+      "  term_3 = np.log(R_determinant)\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Adjusting the provided snippet to handle all off-diagonal values of the sim.rho matrix\n",
+    "sim_count = 1000\n",
+    " # Updated to demonstrate the calculation for a 3x3 matrix (assuming this is what you meant by handling all off-diagonal values)\n",
+    "num_params = int(K * (K - 1) / 2)\n",
+    "\n",
+    "# Initialize the array to store the off-diagonal values of sim.rho_matrix and ccc.ccc_estimate.x\n",
+    "# Note: Assuming `ccc.ccc_estimate.x` can return multiple values, otherwise, the storing logic might need adjustment\n",
+    "results = np.zeros((sim_count, num_params * 2))  # Updated to hold all off-diagonal values and corresponding estimates\n",
+    "\n",
+    "for i in tqdm(range(sim_count), desc='Fitting Model'):\n",
+    "    # Simulate the RSDC model\n",
+    "    sim = RSDC(n_states=N, K_series=K, num_obs=O, transition_diagonal=0.99, deterministic=True)\n",
+    "    sim.simulate()\n",
+    "    \n",
+    "    # Fit the CCC model\n",
+    "    ccc = CCC(sim.data)\n",
+    "    ccc.fit()\n",
+    "    ccc.minimize_correlation()\n",
+    "    \n",
+    "    # Extract the off-diagonal values of sim.rho_matrix\n",
+    "    rho_off_diagonal_values = sim.rho_matrix[0][np.triu_indices(K, k=1)]\n",
+    "    \n",
+    "    # Assuming ccc_estimate.x returns a flat array of estimates corresponding to the off-diagonal values\n",
+    "    ccc_estimates = ccc.ccc_estimate.x\n",
+    "    \n",
+    "    # Store the off-diagonal values and ccc_estimate.x in the results array\n",
+    "    results[i, :num_params] = rho_off_diagonal_values\n",
+    "    results[i, num_params:] = ccc_estimates\n",
+    "\n",
+    "# Calculate the differences for each off-diagonal pair\n",
+    "differences = results[:, :num_params] - results[:, num_params:]\n",
+    "\n",
+    "# Flatten the differences to get a single histogram for all off-diagonal comparisons\n",
+    "differences_flat = differences.flatten()\n",
+    "\n",
+    "# Create a histogram of the flattened differences\n",
+    "plt.hist(differences_flat, bins='auto')\n",
+    "plt.title('Histogram of All sim.rho Off-Diagonal - ccc_estimate.x Differences')\n",
+    "plt.xlabel('Difference')\n",
+    "plt.ylabel('Frequency')\n",
+    "plt.show()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "97d34a19-3fab-4a4f-89af-78434339a1d5",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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QUGB7rvvPr388st6/PHH1bx58xKPaUX43//+p5ycHL377rsOs0WbNm0q0rekupo1a6asrKxSvUaXGjtQWTinB/Awf35bp27dumrevLnDJceF98j582XVAwcOVH5+vl588UWH9ueee042m01xcXGSpAEDBkj641LtC73wwgulrrNwNuHPsyaFV+1UBTExMfL19dXzzz/vMI4lS5YoIyPjolezlcWfj6mXl5f97crC41rSMa0IxR27jIwMJSUlFelbp06dYmu65ZZblJycrA8//LDIutOnT9vPHyrN2IHKwkwP4GGuuOIK9e7dW127dlVwcLB27Nihd955RxMnTrT36dq1qyRp8uTJGjBggLy9vTV8+HANHjxYffr00WOPPaaDBw+qY8eO+uijj7RmzRpNmTJFzZo1s28/bNgwLViwQCdPnrRfsv7DDz9IKvl/9xcKCAhQz5499cwzzyg3N1eXXXaZPvroIx04cKACXpWK0aBBAyUkJCgxMVGxsbG6/vrrlZKSopdeekl/+ctfdPvtt5dqP2vXrrXPpl3o6quvVtOmTXX33Xfr1KlT6tu3ry6//HIdOnRIL7zwgjp16mQ/36pTp07y9vbWnDlzlJGRIT8/P/t9dFytf//+9tmX8ePHKysrS6+88opCQ0OVnp7u0Ldr165atGiRnnrqKTVv3lyhoaHq27evHnroIb377ru67rrrFB8fr65duyo7O1vffPON3nnnHR08eFAhISGlGjtQadx23RhQDRVewvzll18Wu75Xr16XvGT9qaeeMt26dTNBQUGmVq1apnXr1uYf//iHw6XJeXl5ZtKkSaZBgwbGZrM5XL5+5swZM3XqVBMREWFq1KhhWrRoYebOnetw6bYxxmRnZ5sJEyaY4OBgU7duXXPDDTeYlJQUI8nhEvLCy81/+eWXIuM5evSoufHGG01QUJAJDAw0N998szl27FiJl73/eR+jRo0yderUKdXrVBxJZsKECUXaSzoOhZd6//my8BdffNG0bt3a1KhRwzRs2NDce++95rfffrvk81/qFgVJSUnGGGPeeecd079/fxMaGmp8fX1No0aNzPjx4016errD/l555RXTtGlT4+3t7VBnSZesr1y5slTjLu71f/fdd02HDh1MzZo1TVRUlJkzZ45ZunSpkWQOHDhg73f8+HEzaNAg4+/vbyQ51HHmzBmTkJBg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5ptvurIsAABQDVWpc3oAAACcRegBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACWQOgBAACW4NbQs3XrVg0ePFgRERGy2WxavXq1fV1ubq4eeeQRtW/fXnXq1FFERITuvPNOHTt2zGEfUVFRstlsDo/Zs2dX8kgAAICnc2voyc7OVseOHbVw4cIi686ePauvvvpKjz/+uL766iutWrVKKSkpuv7664v0nTlzptLT0+2PSZMmVUb5AACgCvFx55PHxcUpLi6u2HWBgYFav369Q9uLL76obt266fDhw2rUqJG93d/fX2FhYRVaKwAAqNqq1Dk9GRkZstlsCgoKcmifPXu26tevr86dO2vu3LnKy8u76H5ycnKUmZnp8AAAANWbW2d6yuLcuXN65JFHNGLECAUEBNjbJ0+erC5duig4OFiff/65EhISlJ6ervnz55e4r1mzZikxMbEyygYAAB6iSoSe3Nxc3XLLLTLGaNGiRQ7rpk2bZv+6Q4cO8vX11fjx4zVr1iz5+fkVu7+EhASH7TIzMxUZGVkxxQMAAI/g8aGnMPAcOnRIH3/8scMsT3Gio6OVl5engwcPqlWrVsX28fPzKzEQAQCA6smjQ09h4Nm/f782bdqk+vXrX3Kb3bt3y8vLS6GhoZVQIQAAqCrcGnqysrKUmppqXz5w4IB2796t4OBghYeH66abbtJXX32l9957T/n5+Tp+/LgkKTg4WL6+vkpOTtb27dvVp08f+fv7Kzk5WVOnTtXtt9+uevXquWtYAADAA7k19OzYsUN9+vSxLxeeZzNq1CjNmDFD7777riSpU6dODttt2rRJvXv3lp+fn5YvX64ZM2YoJydHTZo00dSpUx3O1wEAAJDcHHp69+4tY0yJ6y+2TpK6dOmibdu2ubosAABQDVWp+/QAAAA4i9ADAAAsgdADAAAs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nU4VAwAAUFGcCj3333+/w3Jubq7Onj0rX19f1a5dm9ADAAA8jlNXb/32228Oj6ysLKWkpKhHjx6cyAwAADyS05+99WctWrTQ7Nmzi8wCAQAAeAKXhR7pj5Objx075spdAgAAuIRT5/S8++67DsvGGKWnp+vFF1/UX//6V5cUBgAA4EpOhZ4bbrjBYdlms6lBgwbq27evnn32WVfUBQAA4FJOhZ6CggJX1wEAAFChXHpODwAAgKdyaqZn2rRppe47f/58Z54CAADApZwKPbt27dKuXbuUm5urVq1aSZJ++OEHeXt7q0uXLvZ+NpvNNVUCAACUk1OhZ/DgwfL399err76qevXqSfrjhoWjR4/WNddcowceeMClRQIAAJSXU+f0PPvss5o1a5Y98EhSvXr19NRTT3H1FgAA8EhOhZ7MzEz98ssvRdp/+eUXnTlzptxFAQAAuJpToefGG2/U6NGjtWrVKh09elRHjx7Vf/7zH40ZM0ZDhw51dY0AAADl5tQ5PYsXL9aDDz6o2267Tbm5uX/syMdHY8aM0dy5c11aIAAAgCs4FXpq166tl156SXPnzlVaWpokqVmzZqpTp45LiwMAAHCVct2cMD09Xenp6WrRooXq1KkjY4yr6gIAAHApp0LPyZMn1a9fP7Vs2VIDBw5Uenq6JGnMmDFcrg4AADySU6Fn6tSpqlGjhg4fPqzatWvb22+99VatW7fOZcUBAAC4ilPn9Hz00Uf68MMPdfnllzu0t2jRQocOHXJJYQAAAK7k1ExPdna2wwxPoVOnTsnPz6/cRQEAALiaU6Hnmmuu0WuvvWZfttlsKigo0DPPPKM+ffq4rDgAAABXcertrWeeeUb9+vXTjh07dP78eT388MPau3evTp06pc8++8zVNQIAAJSbUzM97dq10w8//KAePXpoyJAhys7O1tChQ7Vr1y41a9bM1TUCAACUW5lnenJzcxUbG6vFixfrscceq4iaAAAAXK7MMz01atTQnj17KqIWAACACuPU21u33367lixZ4upaAAAAKoxTJzLn5eVp6dKl2rBhg7p27VrkM7fmz5/vkuIkKSoqqth7/9x3331auHChevfurS1btjisGz9+vBYvXuyyGgAAQNVXptDz448/KioqSt9++626dOkiSfrhhx8c+thsNtdVJ+nLL79Ufn6+ffnbb7/Vtddeq5tvvtne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2Do71qSkJOPn52d+/fXXSz6HpxzXC6mUJzK3a9fOoW3EiBFFTmQuz/eKvZ4y9a6mDh06ZHbt2mW/DHvXrl1m165dDpdjt2rVyqxatcq+PHv2bBMUFGTWrFlj9uzZY4YMGVLsJeudO3c227dvN59++qlp0aKFx1yyfrG6jh49alq1amW2b9/usN3+/fuNzWYza9euLbLPd99917zyyivmm2++Mfv37zcvvfSSqV27tnniiScqfDwXU9axpqammpkzZ5odO3aYAwcOmDVr1pimTZuanj172rcpvGS9f//+Zvfu3WbdunWmQYMGHnHJelnGmpGRYaKjo0379u1Namqqw2WveXl5xhjPOK7Lly83fn5+ZtmyZea7774z48aNM0FBQfar5+644w7z6KOP2vt/9tlnxsfHx8ybN8/s27fPTJ8+vdhL1i/18+suZR3v7Nmzja+vr3nnnXccjmHh768zZ86YBx980CQnJ5sDBw6YDRs2mC5dupgWLVq4LaQXKutYExMTzYcffmjS0tLMzp07zfDhw03NmjXN3r177X089diWdayFevToYW699dYi7Z58XM+cOWP/OyrJzJ8/3+zatcscOnTIGGPMo48+au644w57/8JL1h966CGzb98+s3DhwmIvWb/Y61dahB7zx2V/koo8Nm3aZO+j//9eJYUKCgrM448/bho2bGj8/PxMv379TEpKisN+T548aUaMGGHq1q1rAgICzOjRox2ClLtcqq4DBw4UGb8xxiQkJJjIyEiTn59fZJ9r1641nTp1MnXr1jV16tQxHTt2NIsXLy62b2Uq61gPHz5sevbsaYKDg42fn59p3ry5eeihhxzu02OMMQcPHjRxcXGmVq1aJiQkxDzwwAMOl3m7Q1nHumnTpmK/7yWZAwcOGGM857i+8MILplGjRsbX19d069bNbNu2zb6uV69eZtSoUQ79V6xYYVq2bGl8fX1N27Ztzfvvv++wvjQ/v+5UlvE2bty42GM4ffp0Y4wxZ8+eNf379zcNGjQwNWrUMI0bNzZjx44t8x+LilKWsU6ZMsXet2HDhmbgwIHmq6++ctifJx/bsn4ff//990aS+eijj4rsy5OPa0m/WwrHN2rUKNOrV68i23Tq1Mn4+vqapk2bOvy9LXSx16+0bMa48ZpiAACASsJ9egAAgCUQegAAgCUQegAAgCUQegAAgCUQegAAgCUQegAAgCUQegAAgCUQegC4lc1m0+rVq+3L33//va666irVrFnT/nlJxbUBQFlV2w8cBeBe8fHxevXVVyVJPj4+Cg4OVocOHTRixAjFx8fLy+uP/3Olp6erXr169u2mT5+uOnXqKCUlRXXr1i2xDQDKipkeABUmNjZW6enpOnjwoNauXas+ffro/vvv13XXXae8vDxJf3zC8oWf1p6WlqYePXqocePGql+/foltZXX+/PnyDwhAlUboAVBh/Pz8FBYWpssuu0xdunTR3/72N61Zs0Zr167VsmXLJDm+vWWz2bRz507NnDlTNptNM2bMKLZNko4cOaJbbrlFQUFBCg4O1pAhQ3Tw4EH7c8fHx+uGG27QP/7xD0VERKhVq1Zl2m7evHkKDw9X/fr1NWHCBOXm5tr75OTk6JFHHlFkZKT8/PzUvHlzLVmyxL7+22+/VVxcnOrWrauGDRvqjjvu0K+//lohrzGA0iP0AKhUffv2VceOHbVq1aoi69LT09W2bVs98MADSk9P14MPPlhsW25urgYMGCB/f3998skn+uyzz1S3bl3FxsY6zOhs3LhRKSkpWr9+vd57771Sb7dp0yalpaVp06ZNevXVV7Vs2TJ7SJOkO++8U2+99Zaef/557du3Ty+//LL9bbfTp0+rb9++6ty5s3bs2KF169bpxIkTuuWWWyruRQVQKpzTA6DStW7dWnv27CnSHhYWJh8fH9WtW1dhYWGSpLp16xZpe/3111VQUKB///vfstlskqSkpCQFBQVp8+bN6t+/vySpTp06+ve//y1fX98ybVevXj29+OKL8vb2VuvWrTVo0CBt3LhRY8eO1Q8//KAVK1Zo/fr1iomJkSQ1bdrUPoYXX3xRnTt31tNPP21vW7p0qSIjI/XDDz+oZcuWLn0tAZQeoQdApTPG2EOHM77++mulpqbK39/fof3cuXNKS0uzL7dv394eeMqyXdu2beXt7W1fDg8P1zfffCNJ2r17t7y9vdWrV68Sa9u0aVOxJ1ynpaURegA3IvQAqHT79u1TkyZNnN4+KytLXbt21RtvvFFkXYMGDexf16lTx6ntatSo4bDOZrOpoKBAklSrVq1L1jZ48GDNmTOnyLrw8PCLbgugYhF6AFSqjz/+WN98842mTp3q9D66dOmit99+W6GhoQoICKjw7S7Uvn17FRQUaMuWLfa3t/78HP/5z38UFRUlHx9+xQKehBOZAVSYnJwcHT9+XD/99JO++uorPf300xoyZIiuu+463XnnnU7vd+TIkQoJCdGQIUP0ySef6MCBA9q8ebMmT56so0ePuny7C0VFRWnUqFG66667tHr1avs+VqxYIUmaMGGCTp06pREjRujLL79UWlqaPvzwQ40ePVr5+flOjxlA+RF6AFSYdevWKTw8XFFRUYqNjdWmTZv0/PPPa82aNQ7nzJRV7dq1tXXrVjVq1EhDhw5VmzZtNGbMGJ07d+6iMzjObvdnixYt0k033aT77rtPrVu31tixY5WdnS1JioiI0Geffab8/Hz1799f7du315QpUxQUFGS/ISMA97AZY4y7iwAAAKho/LcDAABYAqEHAABYAqEHAABYAqEHAABYAqEHAABYAqEHAABYAqEHAABYAqEHAABYAqEHAABYAqEHAABYAqEHAABYAqEHAABYwv8HV9R8wivpBRgAAAAASUVORK5CYII=",
+      "text/plain": [
+       "<Figure size 640x480 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Create a histogram of the flattened differences\n",
+    "plt.hist(differences_flat, bins='auto')\n",
+    "plt.title('Histogram rho Estimates')\n",
+    "plt.xlabel('Difference')\n",
+    "plt.ylabel('Frequency')\n",
+    "plt.show()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8817dc5e-48d9-40e5-ab00-88c935a81c78",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "29ac1fa3-e775-497f-b278-91341e24c62d",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "72931cdc-4689-4394-a9d8-0cfc555ebe71",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5f8815bd-7d85-4f96-9bd2-e3a4928a70ef",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "my = np.zeros((5,3))\n",
+    "my[:,0] = sim.omega\n",
+    "my[:,1] = sim.alpha\n",
+    "my[:,2] = sim.beta\n",
+    "print(my)\n",
+    "ccc.params"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9db8b8c1-c0bb-4370-af0e-878c4595c0fe",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "37dfefb7-8bde-46d7-8ce9-b6342876a746",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "86df733a-49ce-4fea-bacc-e2cf11ca959b",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5a4bd195-b638-48ab-befc-03e2aac33ac6",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a129a95a-8884-44c4-86aa-070b42f42506",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "46e3f3ab-3f1b-470b-956c-c8900f2aa3f8",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "98b50e0d-f23a-4821-aa7b-a7065c26999b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "print('Simulated')\n",
+    "model = Base(sim.data, max_iterations=2)\n",
+    "model.fit()\n",
+    "# Example: Plotting smoothed probabilities for the first series (k=0)\n",
+    "# Assuming u_hat is already computed and has shape (K, T, N)\n",
+    "k = 0  # Index of the series you want to plot, adjust accordingly\n",
+    "\n",
+    "# Aggregate smoothed probabilities over K series if needed, here shown for a specific series\n",
+    "# For aggregation, you might use: u_hat_mean = u_hat.mean(axis=0) for mean probabilities across series\n",
+    "        # Set seaborn style for better aesthetics\n",
+    "sns.set(style='whitegrid')\n",
+    "\n",
+    "# Determine unique states for coloring\n",
+    "states = np.unique(sim.full_data[:, 0])\n",
+    "colors = sns.color_palette(\"pastel\", len(states))\n",
+    "\n",
+    "# Create a color map based on states\n",
+    "state_colors = {state: colors[i] for i, state in enumerate(states)}\n",
+    "# Plotting\n",
+    "plt.figure(figsize=(17, 4))\n",
+    "\n",
+    "\n",
+    "# Shade the background based on states\n",
+    "for t in range(model.T):\n",
+    "    state = int(sim.full_data[t, 0])\n",
+    "    plt.axvspan(t, t+1, color=state_colors[state], alpha=0.6)\n",
+    "plt.plot(model.u_hat[k, :, 0], label=f'State {0}')\n",
+    "\n",
+    "plt.title('Smoothed Probabilities Over Time')\n",
+    "plt.xlabel('Time')\n",
+    "plt.ylabel('Probability')\n",
+    "plt.legend()\n",
+    "plt.show()\n",
+    "model.transition_matrix"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4aacf006-eceb-428f-95c4-088a6bb5dfdc",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "sim = AR(n_states=N, K_series = K, num_obs = O, transition_diagonal=0.99, deterministic=True) #sigmas = [[0,0]]\n",
+    "sim.simulate()\n",
+    "model = Base(sim.data, max_iterations=1)\n",
+    "model.get_densities()\n",
+    "model.forward_pass()\n",
+    "model.backward_pass()\n",
+    "model.calculate_smoothed_probabilities()\n",
+    "# Example: Plotting smoothed probabilities for the first series (k=0)\n",
+    "# Assuming u_hat is already computed and has shape (K, T, N)\n",
+    "k = 0  # Index of the series you want to plot, adjust accordingly\n",
+    "\n",
+    "# Aggregate smoothed probabilities over K series if needed, here shown for a specific series\n",
+    "# For aggregation, you might use: u_hat_mean = u_hat.mean(axis=0) for mean probabilities across series\n",
+    "        # Set seaborn style for better aesthetics\n",
+    "sns.set(style='whitegrid')\n",
+    "\n",
+    "# Determine unique states for coloring\n",
+    "states = np.unique(sim.full_data[:, 0])\n",
+    "colors = sns.color_palette(\"pastel\", len(states))\n",
+    "\n",
+    "# Create a color map based on states\n",
+    "state_colors = {state: colors[i] for i, state in enumerate(states)}\n",
+    "# Plotting\n",
+    "plt.figure(figsize=(17, 4))\n",
+    "\n",
+    "\n",
+    "# Shade the background based on states\n",
+    "for t in range(model.T):\n",
+    "    state = int(sim.full_data[t, 0])\n",
+    "    plt.axvspan(t, t+1, color=state_colors[state], alpha=0.6)\n",
+    "plt.plot(model.u_hat[k, :, 0], label=f'State {0}')\n",
+    "\n",
+    "plt.title('Smoothed Probabilities Over Time')\n",
+    "plt.xlabel('Time')\n",
+    "plt.ylabel('Probability')\n",
+    "plt.legend()\n",
+    "plt.show()\n",
+    "\n",
+    "sim.plot_simulation()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "74bd1adf-28e3-4aa0-9284-72cdd728aecb",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# print(model.mu_hat-sim.mu)\n",
+    "import matplotlib.pyplot as plt\n",
+    "# Compute differences\n",
+    "\n",
+    "diff_mu = model.mu - sim.mu\n",
+    "\n",
+    "diff_phi = model.phi - sim.phi\n",
+    "\n",
+    "diff_sigma = np.sqrt(model.sigma) - sim.sigmas\n",
+    "\n",
+    "\n",
+    "# Plotting histograms,\n",
+    "\n",
+    "fig, axes = plt.subplots(3, 1, figsize=(8, 12))\n",
+    "\n",
+    "# Histogram for mu,\n",
+    "\n",
+    "axes[0].hist(diff_mu.flatten(), bins=30, alpha=0.7, label='mu')\n",
+    "\n",
+    "axes[0].set_title('Histogram of Differences for mu')\n",
+    "\n",
+    "axes[0].set_xlabel('Value')\n",
+    "\n",
+    "axes[0].set_ylabel('Frequency')\n",
+    "\n",
+    "axes[0].legend()\n",
+    "\n",
+    "\n",
+    "\n",
+    "# Histogram for phi\n",
+    "\n",
+    "axes[1].hist(diff_phi.flatten(), bins=30, alpha=0.7, label='phi', color='orange')\n",
+    "\n",
+    "axes[1].set_title('Histogram of Differences for phi')\n",
+    "\n",
+    "axes[1].set_xlabel('Value')\n",
+    "\n",
+    "axes[1].set_ylabel('Frequency')\n",
+    "\n",
+    "axes[1].legend()\n",
+    "\n",
+    "\n",
+    "\n",
+    "# Histogram for sigma\n",
+    "\n",
+    "axes[2].hist(diff_sigma.flatten(), bins=30, alpha=0.7, label='sigma', color='green')\n",
+    "\n",
+    "axes[2].set_title('Histogram of Differences for sigma')\n",
+    "\n",
+    "axes[2].set_xlabel('Value')\n",
+    "\n",
+    "axes[2].set_ylabel('Frequency')\n",
+    "\n",
+    "axes[2].legend()\n",
+    "\n",
+    "\n",
+    "\n",
+    "plt.tight_layout()\n",
+    "plt.show()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3b19371d-1a8f-4ca6-ad0d-0ac4d7bc16c2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# print('\\n Mu Values')\n",
+    "# print(sim.mu)\n",
+    "# print('\\n Phi Values')\n",
+    "# print(sim.phi)\n",
+    "# print('\\n Sigma Values')\n",
+    "# print(sim.sigmas)\n",
+    "# Set Start Time \n",
+    "# start_time = time.time()\n",
+    "# # Capture the end time\n",
+    "# end_time = time.time()\n",
+    "\n",
+    "# # Calculate and print the elapsed time\n",
+    "# elapsed_time = end_time - start_time\n",
+    "# print(f\"The Simulation took {elapsed_time} seconds to execute.\")\n",
+    "\n",
+    "\n",
+    "\n",
+    "# # Set Start Time \n",
+    "# start_time = time.time()\n",
+    "\n",
+    "# # Execute the function\n",
+    "# model.get_densities()\n",
+    "\n",
+    "# # Capture the end time\n",
+    "# end_time = time.time()\n",
+    "\n",
+    "# # Calculate and print the elapsed time\n",
+    "# elapsed_time = end_time - start_time\n",
+    "# print(f\"The Density Generation took {elapsed_time} seconds to execute.\")\n",
+    "\n",
+    "# # Set Start Time \n",
+    "# start_time = time.time()\n",
+    "\n",
+    "# model.forward_pass()\n",
+    "# # Capture the end time\n",
+    "# end_time = time.time()\n",
+    "\n",
+    "# # Calculate and print the elapsed time\n",
+    "# elapsed_time = end_time - start_time\n",
+    "# print(f\"The Forward Pass took {elapsed_time} seconds to execute.\")\n",
+    "\n",
+    "\n",
+    "# # Set Start Time \n",
+    "# start_time = time.time()\n",
+    "\n",
+    "# model.backward_pass()\n",
+    "# # Capture the end time\n",
+    "# end_time = time.time()\n",
+    "\n",
+    "# # Calculate and print the elapsed time\n",
+    "# elapsed_time = end_time - start_time\n",
+    "# print(f\"The Backward Pass took {elapsed_time} seconds to execute.\")\n",
+    "\n",
+    "# # Set Start Time \n",
+    "# start_time = time.time()\n",
+    "\n",
+    "# model.calculate_smoothed_probabilities()\n",
+    "# # Capture the end time\n",
+    "# end_time = time.time()\n",
+    "\n",
+    "# # Calculate and print the elapsed time\n",
+    "# elapsed_time = end_time - start_time\n",
+    "# print(f\"The Smoothing took {elapsed_time} seconds to execute.\")\n",
+    "\n",
+    "# # Set Start Time \n",
+    "# start_time = time.time()\n",
+    "\n",
+    "# model.estimate_state_parameters()\n",
+    "# # Capture the end time\n",
+    "# end_time = time.time()\n",
+    "\n",
+    "# # Calculate and print the elapsed time\n",
+    "# elapsed_time = end_time - start_time\n",
+    "# print(f\"The Parameter_estimation took {elapsed_time} seconds to execute.\")\n",
+    "\n",
+    "\n",
+    "# u_hat_state_0 = model.u_hat[1,:]\n",
+    "\n",
+    "# # Plotting\n",
+    "# plt.plot(u_hat_state_0)\n",
+    "# plt.title('u_hat for State 0')\n",
+    "# plt.xlabel('Observation')\n",
+    "# plt.ylabel('u_hat')\n",
+    "# plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6c5bdfca-3339-4493-824b-e488ad0b04cc",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# # import numpy as np\n",
+    "# # import matplotlib.pyplot as plt\n",
+    "\n",
+    "# # # Compute the differences for each row as described\n",
+    "# # diff_mu_largest = np.max(model.mu, axis=1) - np.max(sim.mu, axis=1)\n",
+    "# # diff_mu_smallest = np.min(model.mu, axis=1) - np.min(sim.mu, axis=1)\n",
+    "\n",
+    "# # diff_phi_largest = np.max(model.phi, axis=1) - np.max(sim.phi, axis=1)\n",
+    "# # diff_phi_smallest = np.min(model.phi, axis=1) - np.min(sim.phi, axis=1)\n",
+    "\n",
+    "# # diff_sigma_largest = np.max(np.sqrt(model.sigma), axis=1) - np.max(sim.sigmas, axis=1)\n",
+    "# # diff_sigma_smallest = np.min(np.sqrt(model.sigma), axis=1) - np.min(sim.sigmas, axis=1)\n",
+    "\n",
+    "# # # Combine the differences for plotting\n",
+    "# # diff_mu_combined = np.concatenate((diff_mu_largest, diff_mu_smallest))\n",
+    "# # diff_phi_combined = np.concatenate((diff_phi_largest, diff_phi_smallest))\n",
+    "# # diff_sigma_combined = np.concatenate((diff_sigma_largest, diff_sigma_smallest))\n",
+    "\n",
+    "# # Plotting histograms\n",
+    "# fig, axes = plt.subplots(3, 1, figsize=(8, 12))\n",
+    "\n",
+    "# # Histogram for mu differences\n",
+    "# axes[0].hist(diff_mu_combined, bins=30, alpha=0.7, label='mu')\n",
+    "# axes[0].set_title('Histogram of Differences for mu')\n",
+    "# axes[0].set_xlabel('Value')\n",
+    "# axes[0].set_ylabel('Frequency')\n",
+    "# axes[0].legend()\n",
+    "\n",
+    "# # Histogram for phi differences\n",
+    "# axes[1].hist(diff_phi_combined, bins=30, alpha=0.7, label='phi', color='orange')\n",
+    "# axes[1].set_title('Histogram of Differences for phi')\n",
+    "# axes[1].set_xlabel('Value')\n",
+    "# axes[1].set_ylabel('Frequency')\n",
+    "# axes[1].legend()\n",
+    "\n",
+    "# # Histogram for sigma differences\n",
+    "# axes[2].hist(diff_sigma_combined, bins=30, alpha=0.7, label='sigma', color='green')\n",
+    "# axes[2].set_title('Histogram of Differences for sigma')\n",
+    "# axes[2].set_xlabel('Value')\n",
+    "# axes[2].set_ylabel('Frequency')\n",
+    "# axes[2].legend()\n",
+    "\n",
+    "# plt.tight_layout()\n",
+    "\n",
+    "# plt.show()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2e55b70c-5112-4602-9b47-037e2df96d19",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ad2f5ba8-49a2-4faf-9dc0-1048c9e67762",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "547bf1e8-26c2-46d0-affb-98a2c5c19e55",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# from importlib import reload\n",
+    "# reload(EM)\n",
+    "# reload(Tools)\n",
+    "# from Tools import AR\n",
+    "# from EM import Base\n",
+    "# # reload(EM)\n",
+    "# # from EM import Base\n",
+    "# O = 1000\n",
+    "# K = 10\n",
+    "# N = 2\n",
+    "# # phi_vals = np.zeros((K,N))\n",
+    "# sim2 = AR(n_states=N, K_series = K, num_obs = O,transition_diagonal=0.99, deterministic=True)\n",
+    "# # print('\\n Mu Values')\n",
+    "# # print(sim.mu)\n",
+    "# # print('\\n Phi Values')\n",
+    "# # print(sim.phi)\n",
+    "# # print('\\n Sigma Values')\n",
+    "# # print(sim.sigmas)\n",
+    "# # Set Start Time \n",
+    "# # start_time = time.time()\n",
+    "\n",
+    "# sim2.simulate()\n",
+    "# model2 = Base(sim2.data, max_iterations=50)\n",
+    "# model2.fit()\n",
+    "# print(model2.mu-sim2.mu)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a80d0b5f-50fe-453b-9fd6-706e8a5c494d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# # print(model.mu_hat-sim.mu)\n",
+    "# import matplotlib.pyplot as plt\n",
+    "# # Compute differences\n",
+    "\n",
+    "# diff_mu2 = model2.mu - sim2.mu\n",
+    "\n",
+    "# diff_phi2 = model2.phi - sim2.phi\n",
+    "\n",
+    "# diff_sigma2 = np.sqrt(model2.sigma) - sim2.sigmas\n",
+    "\n",
+    "\n",
+    "# # Plotting histograms,\n",
+    "\n",
+    "# fig, axes = plt.subplots(3, 1, figsize=(8, 12))\n",
+    "\n",
+    "# # Histogram for mu,\n",
+    "\n",
+    "# axes[0].hist(diff_mu.flatten(), bins=30, alpha=0.7, label='mu')\n",
+    "\n",
+    "# axes[0].set_title('Histogram of Differences for mu')\n",
+    "\n",
+    "# axes[0].set_xlabel('Value')\n",
+    "\n",
+    "# axes[0].set_ylabel('Frequency')\n",
+    "\n",
+    "# axes[0].legend()\n",
+    "\n",
+    "\n",
+    "\n",
+    "# # Histogram for phi\n",
+    "\n",
+    "# axes[1].hist(diff_phi.flatten(), bins=30, alpha=0.7, label='phi', color='orange')\n",
+    "\n",
+    "# axes[1].set_title('Histogram of Differences for phi')\n",
+    "\n",
+    "# axes[1].set_xlabel('Value')\n",
+    "\n",
+    "# axes[1].set_ylabel('Frequency')\n",
+    "\n",
+    "# axes[1].legend()\n",
+    "\n",
+    "\n",
+    "\n",
+    "# # Histogram for sigma\n",
+    "\n",
+    "# axes[2].hist(diff_sigma.flatten(), bins=30, alpha=0.7, label='sigma', color='green')\n",
+    "\n",
+    "# axes[2].set_title('Histogram of Differences for sigma')\n",
+    "\n",
+    "# axes[2].set_xlabel('Value')\n",
+    "\n",
+    "# axes[2].set_ylabel('Frequency')\n",
+    "\n",
+    "# axes[2].legend()\n",
+    "\n",
+    "\n",
+    "\n",
+    "# plt.tight_layout()\n",
+    "\n",
+    "# plt.show()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8d4cdd1f-6865-49b2-9260-a63e9143c2b3",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "abeee9d9-84a7-43b9-b60e-00ab6492b9c0",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c25cab03-6e0d-4ee6-80ee-1a8d28217381",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "76814da7-5ae3-4b6f-bf2d-d39c55fc8f37",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "fb8dc577-adb7-4208-b585-621624b03bc9",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0d3dec36-89e6-4714-bcb5-687f26ea0e71",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "39135960-5b3d-42ca-b0a6-be82fb5ec478",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "cebc1101-6970-4d14-98de-70dc50410213",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d3ab1b36-9bda-4037-8b0e-ba7342e36ad8",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d2f07584-1f85-4efb-9348-0e182dc501b7",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.6"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
